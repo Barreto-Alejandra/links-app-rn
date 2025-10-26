@@ -1,4 +1,4 @@
-import { View, Image } from "react-native"
+import { View, Image, TouchableOpacity } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 
 import { styles } from "./styles"
@@ -9,8 +9,9 @@ export default function Index() {
    <View style={styles.container}>
       <View style={styles.header}>
         <Image source={require("@/assets/logo.png")} style={styles.logo} />
-
-        <MaterialIcons name="add" size={32} color={colors.green[300]} />
+        <TouchableOpacity>
+          <MaterialIcons name="add" size={32} color={colors.green[300]} />
+        </TouchableOpacity>
       </View>
    </View>
   )
