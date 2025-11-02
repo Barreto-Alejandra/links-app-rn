@@ -6,6 +6,7 @@ import { styles } from "./styles"
 import { colors } from "@/styles/colors"
 
 import { Categories } from "@/components/categories"
+import { Input } from "@/components/input"
 
 export default function Add() {
   return (
@@ -18,6 +19,10 @@ export default function Add() {
       </View>
       <Text style={styles.label}>Select category</Text>
       <Categories />
+      <View style={styles.form}>
+        <Input placeholder="Name" />
+        <Input placeholder="Url" />
+      </View>
     </View> 
   )
 }
