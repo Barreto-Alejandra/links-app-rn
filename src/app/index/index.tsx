@@ -14,23 +14,32 @@ import { Option } from "@/components/option"
 
 export default function Index() {
 
+  const [showModal, setShowModal] = useState(false)
+  const [link, setLink] = useState<LinkStorage>({} as LinkStorage)
   const [links, setLinks] = useState<LinkStorage[]>([])
-
   const [category, setCategory] = useState(categories[0].name)
 
   async function getLinks() {
     try {
       const response = await linkStorage.get()
-      setLinks(response)
+      const filtered = response.filter((link) => link.category === category)
+
+      setLinks(filtered)
+
     } catch (error){
       Alert.alert("Error", "Failed to list links")
     }
   }
 
+  function handleDetails( selected: LinkStorage ) {
+    setShowModal(true)
+    setLink(selected)
+  }
+
   useFocusEffect(
     useCallback(() => {
       getLinks()
-    }, [])
+    }, [category])
   )
 
   return (
@@ -50,29 +59,33 @@ export default function Index() {
         <Link 
           name={item.name}
           url={item.url} 
-          onDetails={() => console.log("Click")}
+          onDetails={() => handleDetails(item)}
         />
       )}
       style={styles.links}
       contentContainerStyle={styles.linksContent}
       showsVerticalScrollIndicator={false}
     />
-    <Modal transparent visible={false} >
+    <Modal transparent visible={showModal} animationType="slide" >
       <View style={styles.modal}>
         <View style={styles.modalContent}>
           <View style={styles.modalHeader}>
             <Text style={styles.modalCategory}>
-              Course
+              {link.category}
             </Text>
-            <TouchableOpacity>
-              <MaterialIcons name="close" size={20} color={colors.gray[400]} />
+            <TouchableOpacity onPress={() => setShowModal(false)}>
+              <MaterialIcons 
+                name="close" 
+                size={20} 
+                color={colors.gray[400]} 
+              />
             </TouchableOpacity>
           </View>
           <Text style={styles.modalLinkName}>
-            Link Project
+            {link.name}
           </Text>
           <Text style={styles.modalUrl}>
-            https://
+            {link.url}
           </Text>
 
           <View style={styles.modalFooter}>
