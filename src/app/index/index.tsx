@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react"
-import { View, Image, TouchableOpacity, FlatList, Modal, Text, Alert } from "react-native"
+import { View, Image, TouchableOpacity, FlatList, Modal, Text, Alert, Linking } from "react-native"
 import { MaterialIcons } from "@expo/vector-icons"
 import { router, useFocusEffect } from "expo-router"
 
@@ -34,6 +34,34 @@ export default function Index() {
   function handleDetails( selected: LinkStorage ) {
     setShowModal(true)
     setLink(selected)
+  }
+
+  async function linkRemove() {
+    try {
+      await linkStorage.remove(link.id)
+      getLinks()
+      setShowModal(false)
+    } catch (error) {
+      Alert.alert("Error", "It was not possible to delete")
+      console.log(error)
+    }
+  }
+
+  function handleRemove() {
+    Alert.alert("Delete", "Do you really want to delete?", [
+      { style: "cancel", text: "No" },
+      { text: "Yes", onPress: linkRemove },
+    ])
+  }
+
+  async function handleOpen() {
+    try {
+      await Linking.openURL(link.url);
+      setShowModal(false)
+    } catch (error) {
+      Alert.alert("Link", "It was not possible to open the link");
+      console.log(error);
+    }
   }
 
   useFocusEffect(
@@ -89,8 +117,8 @@ export default function Index() {
           </Text>
 
           <View style={styles.modalFooter}>
-            <Option name="Delete" icon="delete" variant="secondary"/>
-            <Option name="Open" icon="language" />
+            <Option name="Delete" icon="delete" variant="secondary" onPress={handleRemove} />
+            <Option name="Open" icon="language" onPress={handleOpen}/>
           </View>
         </View>
       </View>
